@@ -5,6 +5,7 @@ export default class Game {
     static get instance() { return this._instance }
 
     static CONTAINERS = {
+        STATE:  document.querySelector('#root #mine-pic'),
         STOPWATCH: document.querySelector('#root #stopwatch'),
         MINES: document.querySelector('#root #mines-left'),
         FIELD: document.querySelector('#root #game-root')
@@ -33,10 +34,15 @@ export default class Game {
     set state(value) {
         this._state = value
         if (this._state !== Game.STATES.IDLE) {
-            if (this._state == Game.STATES.ONGOING) this.triggerStopwatch(true);
-            else {
+            if (this._state == Game.STATES.ONGOING) {
+                this.triggerStopwatch(true);
+                Game.CONTAINERS.STATE.classList.remove('finish', 'win', 'lose');
+            } else {
                 this.doShowMines = true;
                 this.triggerStopwatch(false);
+
+                Game.CONTAINERS.STATE.classList.add('finish', this._state == Game.STATES.WIN ? 'win' : 'lose');
+                
             }
         }
     }
@@ -93,7 +99,7 @@ export default class Game {
 
     constructor(preset) {
         this.preset = preset;
-        this.cellsLeft = this.width * this.height;
+        this.cellsLeft = this.width * this.height - this.minesCount;
         this.minesLeft = this.minesCount;
         this.state = Game.STATES.ONGOING;
         this._renderField();
@@ -111,10 +117,25 @@ export default class Game {
 
                 if (this._checkIsMine(x, y)) this.state = Game.STATES.LOSE;
                 else {
+                    this.cellsLeft--;
                     minesAbove = this._checkNeighbors(x, y);
 
-                    if (minesAbove > 0) cellElement.innerText = minesAbove;
-                    else this.getNeighbors(x, y).forEach(neighbor => { this.openCell(neighbor.x, neighbor.y) });
+                    if (minesAbove == 0) this.getNeighbors(x, y).forEach(neighbor => { this.openCell(neighbor.x, neighbor.y) })
+                    else {
+                        cellElement.innerText = minesAbove;
+                        switch (minesAbove) {
+                            case 1: cellElement.style.color = '#35bfa0'; break;
+                            case 2: cellElement.style.color = '#43bf35'; break;
+                            case 3: cellElement.style.color = '#d9d51e'; break;
+                            case 4: cellElement.style.color = '#dd9b45'; break;
+                            case 5: cellElement.style.color = '#ff0000'; break;
+                            case 6: cellElement.style.color = '#ff0097'; break;
+                            case 7: cellElement.style.color = '#da00ff'; break;
+                            case 8: cellElement.style.color = '#390983'; break;
+                        }
+                    }
+
+                    if (this.cellsLeft == 0) this.state = Game.STATES.WIN;
                 }
             }
         }

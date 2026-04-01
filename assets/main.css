@@ -3,6 +3,7 @@
     --clr-acnt: #cfb1ce;
     --clr-acnt--hv: #a185a0;
     --clr-acnt--ac: #887688;
+    --clr-dngr: #ffb3b3;
     --br-otr: 10px;
     --br-inr: 5px;
 }
@@ -51,6 +52,7 @@ main {
 
 .tab h3 {
     margin: unset;
+    font-size: x-large;
 }
 
 form {
@@ -75,6 +77,7 @@ form {
     cursor: pointer;
     transition: .2s;
     background-color: var(--clr-acnt);
+    font-size: x-large;
 }
 
 .button-group button:hover {
@@ -186,6 +189,12 @@ form {
     font-size: large;
 }
 
+#metrics span {
+    background: white;
+    padding: 5px 10px;
+    border-radius: var(--br-inr);
+}
+
 #root table {
     border-spacing: 4px;
 }
@@ -201,6 +210,10 @@ form {
     animation: cellAppear .1s linear;
     position: relative;
     user-select: none;
+    text-align: center;
+    font-weight: 700;
+    color: transparent;
+    font-size: xx-large;
 }
 
 #root td:not(.open):hover {
@@ -214,8 +227,12 @@ form {
 
 #root td.open {
     background-color: var(--clr-bgnd);
-    box-shadow: 0 0 0 0 var(--clr-acnt--ac), inset 0 2px 0 0 var(--clr-acnt--ac);
+    box-shadow: 0 0 0 0 var(--clr-acnt--ac), inset 0 2px 3px 0 var(--clr-acnt--ac);
     cursor: default;
+}
+
+#root td.open.mine {
+    background-color: var(--clr-dngr);
 }
 
 #root td::before {
@@ -230,12 +247,13 @@ form {
     background-repeat: no-repeat;
     scale: 0.5;
     top: 0;
+    left: 1px;
     transition: .15s opacity, .15s scale;
 }
 
 #root td.mine::before {
     opacity: 1;
-    scale: 0.8;
+    scale: 0.75;
     background-image: url('/assets/img/mine.svg');
     animation: rotate 1s cubic-bezier(0.75, 0.4, 0.5, 0.75);
 }
@@ -245,13 +263,31 @@ form {
     background-image: url('/assets/img/flag.svg');
 }
 
-#mine-pic img {
+#mine-pic {
     width: 50px;
+    height: 50px;
     border-radius: 99999px;
     background-color: white;
+    background-image: url('/assets/img/mine.svg');
+    background-position: center;
+    background-size: 50px;
+    background-repeat: no-repeat;
     padding: 5px;
+    transition: .2s background-color;
     transform: rotate(30deg);
+}
+
+#mine-pic:not(.finish) {
     animation: rotate 1.5s cubic-bezier(0.75, 0.4, 0.5, 0.75) infinite;
+}
+
+#mine-pic.finish.lose {
+    background-color: #FFAFAF;
+    background-image: url('/assets/img/mine-evil.svg');
+}
+
+#mine-pic.finish.win {
+    background-image: url('/assets/img/mine-good.svg');
 }
 
 @keyframes rotate {
