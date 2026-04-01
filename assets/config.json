@@ -1,0 +1,12 @@
+{
+    "width": {
+        "max": 20,
+        "min": 5
+    }, "height": {
+        "max": 20,
+        "min": 5
+    }, "minesPercent": {
+        "max": 0.7,
+        "min": 0.2
+    }
+}

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link defer rel="stylesheet" href="/assets/main.css">
+</head>
+<body>
+    <main>
+        <h1> Minesweeper </h1>
+        <div class="tab show" id="presets">
+            <h3> Выберите уровень сложности: </h3>
+            <div class="button-group col">
+                <button type="button" data-preset="easy"> Легкий </button>
+                <button type="button" data-preset="normal"> Нормальный </button>
+                <button type="button" data-preset="hard"> Сложный </button>
+                <button type="button" data-preset="impossible"> Невозможный </button>
+                <button type="button" data-tab="custom-preset" data-preset="custom"> Пользовательский </button>
+            </div>
+        </div>
+        <div class="tab" id="custom-preset">
+            <h3> Введите параметры поля: </h3>
+            <form id="custom">
+                <div class="form-group">
+                    <label> Ширина </label>
+                    <input name="width" type="number">
+                </div>
+                <div class="form-group">
+                    <label> Высота </label>
+                    <input name="height" type="number">
+                </div>
+                <div class="form-group">
+                    <label> Процент мин </label>
+                    <div class="scale--wrapper">
+                        <div class="scale">
+                            <div class="scale--covered"> </div>
+                            <div class="slider"> </div>
+                        </div>
+                        <span class="counter"> 20% </span>
+                        <input step="0.01" name="minesPercent" type="range">
+                    </div> 
+                </div>
+                <div class="button-group" style="justify-content: center"> 
+                    <button type="button" data-tab="presets"> Назад </button>
+                    <button type="button" id="random"> Случайно </button>
+                    <button type="submit"> Принять </button>
+                </div>
+            </form>
+        </div>
+        <table>
+            <tbody id="game-root"> </tbody>
+        </table>
+    </main>
+    <footer>
+        <span> see more at <a href="https://github.com/razpersurp/minesweeper"> Repository </a> </span>
+        <span> author: <a href="https://github.com/razpersurp"> RazperSurp </a> </span>
+        <span> 2026 </span>
+    </footer>
+    <script defer type="module" src="/assets/main.mjs"></script>
+</body>
+</html>
