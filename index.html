@@ -12,11 +12,11 @@
         <div class="tab show" id="presets">
             <h3> Выберите уровень сложности: </h3>
             <div class="button-group col">
-                <button type="button" data-preset="easy"> Легкий </button>
-                <button type="button" data-preset="normal"> Нормальный </button>
-                <button type="button" data-preset="hard"> Сложный </button>
-                <button type="button" data-preset="impossible"> Невозможный </button>
-                <button type="button" data-tab="custom-preset" data-preset="custom"> Пользовательский </button>
+                <button type="button" data-tab="root" data-preset="easy"> Легкий </button>
+                <button type="button" data-tab="root" data-preset="normal"> Нормальный </button>
+                <button type="button" data-tab="root" data-preset="hard"> Сложный </button>
+                <button type="button" data-tab="root" data-preset="impossible"> Невозможный </button>
+                <button type="button" data-tab="custom-preset"> Пользовательский </button>
             </div>
         </div>
         <div class="tab" id="custom-preset">
@@ -44,13 +44,26 @@
                 <div class="button-group" style="justify-content: center"> 
                     <button type="button" data-tab="presets"> Назад </button>
                     <button type="button" id="random"> Случайно </button>
-                    <button type="submit"> Принять </button>
+                    <button type="submit" data-tab="root"> Принять </button>
                 </div>
             </form>
         </div>
-        <table>
-            <tbody id="game-root"> </tbody>
-        </table>
+        <div class="tab" id="root">
+            <div id="metrics">
+                <div class="metrics-group" id="mine-pic">
+                    <img src="/assets/img/mine.svg"> <span id="mines-left"> -1 </span>
+                </div>
+                <div class="metrics-group">
+                    <span id="stopwatch"> -1 </span>
+                </div>
+                <div class="metrics-group button-group">
+                    <button type="button" data-tab="presets" id="giveup"> Назад </button>
+                </div>
+            </div>
+            <table>
+                <tbody id="game-root"> </tbody>
+            </table>
+        </div>
     </main>
     <footer>
         <span> see more at <a href="https://github.com/razpersurp/minesweeper"> Repository </a> </span>

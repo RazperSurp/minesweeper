@@ -2,18 +2,18 @@
     "easy": {
         "width": 8,
         "height": 8,
-        "minesPercent": 0.25
+        "minesPercent": 0.15
     }, "normal": {
         "width": 12,
         "height": 12,
-        "minesPercent": 0.4
+        "minesPercent": 0.20
     }, "hard": {
         "width": 18,
         "height": 18,
-        "minesPercent": 0.6
+        "minesPercent": 0.25
     }, "impossible": {
         "width": 20,
         "height": 20,
-        "minesPercent": 0.7
+        "minesPercent": 0.30
     }
 }

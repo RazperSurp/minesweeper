@@ -2,6 +2,7 @@ import presets from '/assets/presets.json' with { type: 'json' };
 import config from '/assets/config.json' with { type: 'json' };
 import Game from '/assets/game.mjs';
 
+window.Game = Game;
 
 Math.precisionRound = (number, precision = 1) => {
     return Math.round(number * Math.pow(10, precision))/Math.pow(10, precision);
@@ -57,7 +58,6 @@ document.querySelectorAll('.scale--wrapper').forEach(wrapper => {
 })
 
 function restyleSlider(slider, counter, cover, k, newX = null) {
-    console.log(k);
     let input = counter.nextElementSibling;
     if (newX === null) newX = (slider.parentNode.offsetWidth * k) - slider.offsetWidth;
 
@@ -74,10 +74,7 @@ function restyleSlider(slider, counter, cover, k, newX = null) {
 
 document.getElementById('random').onclick = e => {
     const preset = Game.generatePreset();
-    for (const [key, value] of Object.entries(preset)) {
-        console.log(document.forms.custom.querySelector(`input[name="${key}"]`));
-        document.forms.custom.querySelector(`input[name="${key}"]`).value = value;
-    }
+    for (const [key, value] of Object.entries(preset)) document.forms.custom.querySelector(`input[name="${key}"]`).value = value;
 
     const minesPercentInput = document.forms.custom.querySelector('input[name="minesPercent"]');
     let [max, min] = [Number(minesPercentInput.max), Number(minesPercentInput.min)];
@@ -89,8 +86,36 @@ document.getElementById('random').onclick = e => {
         counter = root.querySelector('.counter'),
         cover = root.querySelector('.scale--covered');
 
-
     restyleSlider(slider, counter, cover, k);
 }
 
-window.Game = Game;
+document.querySelectorAll('button[data-preset]').forEach(btn => {
+    btn.addEventListener('click', e => { startGame(presets[btn.dataset.preset]) })
+})
+
+document.forms.custom.onsubmit = e => {
+    e.preventDefault(); 
+    e.stopImmediatePropagation();
+
+    let preset = {};
+    (new FormData(e.currentTarget)).forEach((v, k) => { preset[k] = Number(v) })
+    startGame(preset);
+
+    return false;
+}
+
+document.querySelector('#game-root').parentNode.oncontextmenu = e => {
+    e.preventDefault();
+    e.stopImmediatePropagation();
+
+    return false;
+}
+
+document.querySelector('#giveup').addEventListener('click', e => {
+    window.Game.instance.state = window.Game.STATES.LOSE;
+    window.Game.CONTAINERS.FIELD.innerHTML = '';
+})
+
+function startGame(preset) {
+    new Game(preset);
+}
