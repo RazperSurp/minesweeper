@@ -308,6 +308,17 @@ form {
     background-image: url('/assets/img/mine-good.svg');
 }
 
+footer {
+    padding: 5px 10px;
+    margin: auto;
+    background: white;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+    border-radius: var(--br-otr);
+}
+
 @keyframes rotate {
     from {
         transform: rotate(0deg);
