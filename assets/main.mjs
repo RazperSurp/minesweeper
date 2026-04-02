@@ -1,6 +1,6 @@
-import presets from '/assets/presets.json' with { type: 'json' };
-import config from '/assets/config.json' with { type: 'json' };
-import Game from '/assets/game.mjs';
+import presets from './presets.json' with { type: 'json' };
+import config from './config.json' with { type: 'json' };
+import Game from './game.mjs';
 
 window.Game = Game;
 

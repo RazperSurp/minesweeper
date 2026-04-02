@@ -1,4 +1,4 @@
-import config from '/assets/config.json' with { type: 'json' }
+import config from './config.json' with { type: 'json' }
 
 export default class Game {
     static _instance;
