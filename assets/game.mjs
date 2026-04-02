@@ -24,7 +24,8 @@ export default class Game {
         this._doShowMines = value;
         this.mines.forEach((mineCell, i) => { 
             setTimeout(() => {
-                mineCell.classList.toggle('mine', this._doShowMines === true)                
+                mineCell.classList.toggle('mine', this._doShowMines === true)
+                mineCell.classList.toggle('win', this._state == Game.STATES.WIN);
             }, i * 50);
         });
     }
@@ -41,8 +42,7 @@ export default class Game {
                 this.doShowMines = true;
                 this.triggerStopwatch(false);
 
-                Game.CONTAINERS.STATE.classList.add('finish', this._state == Game.STATES.WIN ? 'win' : 'lose');
-                
+                Game.CONTAINERS.STATE.classList.add('finish', this._state == Game.STATES.WIN ? 'win' : 'lose');   
             }
         }
     }
@@ -107,35 +107,47 @@ export default class Game {
         Game._instance = this;
     }
     
-    openCell(x, y) {
-        let minesAbove, cellElement = this._findCell(x, y);
+    openCell(x, y, isAccordion = false) {
+        let minesAbove, flagsAbove, cellElement = this._findCell(x, y);
 
         if (this._state === Game.STATES.ONGOING) {
             if (this._mines.length < 1) this._generateMines(x, y);
-            if (cellElement !== null && (!cellElement.classList.contains('flag') && !cellElement.classList.contains('open'))) {
-                cellElement.classList.add('open');
+            if (cellElement !== null) {
+                [minesAbove, flagsAbove] = this._checkNeighbors(x, y);
+                if (!cellElement.classList.contains('flag') && !cellElement.classList.contains('open')) {
+                    cellElement.classList.add('open');
 
-                if (this._checkIsMine(x, y)) this.state = Game.STATES.LOSE;
-                else {
-                    this.cellsLeft--;
-                    minesAbove = this._checkNeighbors(x, y);
-
-                    if (minesAbove == 0) this.getNeighbors(x, y).forEach(neighbor => { this.openCell(neighbor.x, neighbor.y) })
+                    if (this._checkIsMine(x, y)) this.state = Game.STATES.LOSE;
                     else {
-                        cellElement.innerText = minesAbove;
-                        switch (minesAbove) {
-                            case 1: cellElement.style.color = '#35bfa0'; break;
-                            case 2: cellElement.style.color = '#43bf35'; break;
-                            case 3: cellElement.style.color = '#d9d51e'; break;
-                            case 4: cellElement.style.color = '#dd9b45'; break;
-                            case 5: cellElement.style.color = '#ff0000'; break;
-                            case 6: cellElement.style.color = '#ff0097'; break;
-                            case 7: cellElement.style.color = '#da00ff'; break;
-                            case 8: cellElement.style.color = '#390983'; break;
-                        }
-                    }
+                        this.cellsLeft--;
 
-                    if (this.cellsLeft == 0) this.state = Game.STATES.WIN;
+                        if (minesAbove == 0) this.getNeighbors(x, y).forEach(neighbor => { this.openCell(neighbor.x, neighbor.y, true) })
+                        else {
+                            cellElement.innerText = minesAbove;
+                            switch (minesAbove) {
+                                case 1: cellElement.style.color = '#35bfa0'; break;
+                                case 2: cellElement.style.color = '#43bf35'; break;
+                                case 3: cellElement.style.color = '#d9d51e'; break;
+                                case 4: cellElement.style.color = '#dd9b45'; break;
+                                case 5: cellElement.style.color = '#ff0000'; break;
+                                case 6: cellElement.style.color = '#ff0097'; break;
+                                case 7: cellElement.style.color = '#da00ff'; break;
+                                case 8: cellElement.style.color = '#390983'; break;
+                            }
+                        }
+
+                        if (this.cellsLeft == 0) this.state = Game.STATES.WIN;
+                    }
+                } else if (isAccordion == false && cellElement.classList.contains('open') && flagsAbove == minesAbove) {
+                    this.getNeighbors(x, y).forEach(neighbor => { this.openCell(neighbor.x, neighbor.y, true) });
+                } else if (isAccordion == false && cellElement.classList.contains('open') && flagsAbove != minesAbove) {
+                    this.getNeighbors(x, y).forEach(neighbor => { 
+                        let neighborCell = this._findCell(neighbor.x, neighbor.y)
+                        if (!neighborCell.classList.contains('open') && !neighborCell.classList.contains('flag')) {
+                            neighborCell.classList.add('blink');
+                            setTimeout(() => { neighborCell.classList.remove('blink') }, 200)
+                        }
+                    });
                 }
             }
         }
@@ -151,11 +163,16 @@ export default class Game {
     }
 
     _checkNeighbors(x, y) {
-        let minesCount = 0, 
+        let minesCount = 0,
+            flagsCount = 0,
             neighbors = this.getNeighbors(x, y);
 
-        neighbors.forEach(neighbor => { minesCount += this._checkIsMine(neighbor.x, neighbor.y) ? 1 : 0; })
-        return minesCount;
+        neighbors.forEach(neighbor => { 
+            flagsCount += this._findCell(neighbor.x, neighbor.y).classList.contains('flag') ? 1 : 0; 
+            minesCount += this._checkIsMine(neighbor.x, neighbor.y) ? 1 : 0;
+        })
+
+        return [minesCount, flagsCount];
     }
 
     _checkIsMine(x, y) {
