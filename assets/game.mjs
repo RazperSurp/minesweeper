@@ -18,6 +18,8 @@ export default class Game {
         WIN: 3
     }
 
+    _generationTimeouts = [];
+
     _doShowMines = false;
     get doShowMines() { return this._doShowMines; }
     set doShowMines(value) {
@@ -41,6 +43,7 @@ export default class Game {
             } else {
                 this.doShowMines = true;
                 this.triggerStopwatch(false);
+                this._generationTimeouts.forEach(timeout => { clearTimeout(timeout) });
 
                 Game.CONTAINERS.STATE.classList.add('finish', this._state == Game.STATES.WIN ? 'win' : 'lose');   
             }
@@ -227,10 +230,10 @@ export default class Game {
 
 
         for (let y = 0; y < this.height; y++) {
-            setTimeout(() => {
+            this._generationTimeouts.push(setTimeout(() => {
                 row = document.createElement('tr'); 
                 for (let x = 0; x < this.width; x++) {
-                    setTimeout(() => {
+                    this._generationTimeouts.push(setTimeout(() => {
                         cell = document.createElement('td');
                         cell.dataset.x = x;
                         cell.dataset.y = y;
@@ -246,10 +249,10 @@ export default class Game {
                         }
 
                         row.appendChild(cell);
-                    }, x * 10)
+                    }, x * 10))
                 }
                 Game.CONTAINERS.FIELD.appendChild(row);
-            }, y * this.width * 15);
+            }, y * this.width * 15));
         }
     }
 
